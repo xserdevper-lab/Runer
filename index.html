@@ -2,76 +2,418 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0a0a0a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="RunStat" />
   <meta name="description" content="Running Stats Generator — track your pace, time, distance & calories" />
-  <title>RunStat</title>
+  <title>RunStat - Clean Premium Generator</title>
 
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800;1,900&family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <style>
+    /* --- SYSTEM CORE --- */
+    :root {
+      --amoled-black: #000000;
+      --input-bg: #121214;
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-muted: #8E8E93;
+      --ease-ios: cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--amoled-black);
+      font-family: 'DM Sans', 'Noto Sans Thai', 'Noto Sans KR', sans-serif;
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* Mobile Viewport Constraints */
+    .app-wrapper {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px calc(env(safe-area-inset-bottom, 0px) + 84px) 20px;
+      position: relative;
+    }
+
+    /* --- APP HEADER --- */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      padding: 2px;
+      border-radius: 100px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-ios);
+    }
+
+    .lang-btn.active {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    /* --- INPUT FORM SECTION --- */
+    .input-section {
+      background: rgba(18, 18, 20, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      z-index: 5;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding-left: 4px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 0 14px;
+      color: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px; /* ป้องกัน iOS Auto Zoom */
+      font-weight: 600;
+      outline: none;
+    }
+
+    .input-wrapper input:focus {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Form Action Button */
+    .generate-btn {
+      width: 100%;
+      height: 54px;
+      background: #FFFFFF;
+      color: #000000;
+      border: none;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.1s var(--ease-ios);
+    }
+
+    .generate-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* --- RESULT AREA --- */
+    .result-section {
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* กรอบคลุมสำหรับส่งออกไฟล์ภาพ (ไม่มีขอบโค้ง) */
+    .capture-wrap {
+      background: #FFFFFF;
+      padding: 0;
+      border-radius: 0 !important; /* เอาขอบโค้งออกเด็ดขาด */
+    }
+
+    /* --- PREMIUM WHITE STATS CARD (PURE SQUARE) --- */
+    .stats-card {
+      background: #FFFFFF;
+      color: #000000;
+      border-radius: 0 !important; /* เอาขอบโค้งออกตามสั่ง */
+      padding: 40px 36px;
+      position: relative;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      width: 100%;
+    }
+
+    /* ส่วนหัวการ์ด */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .card-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: #000000;
+      opacity: 0.35;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: #000000;
+      opacity: 0.35;
+    }
+
+    /* --- DIGITAL TYPOGRAPHY (LEFT ALIGNED + PERFECT SPACING) --- */
+    .distance-display {
+      text-align: left; /* ชิดซ้ายตรงตามรูปเรฟ */
+      margin-bottom: 36px;
+    }
+
+    .distance-value {
+      font-family: 'Barlow Condensed', 'Impact', sans-serif;
+      font-size: 105px; /* ขนาดใหญ่พิเศษ */
+      font-weight: 900;
+      font-style: italic;
+      line-height: 0.8;
+      letter-spacing: 0.02em; /* เพิ่มช่องไฟ ไม่ให้ติดหรือซ้อนกันตัวอักษรเวลากดเซฟ */
+      color: #000000;
+      display: block;
+    }
+
+    .distance-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: #8E8E93;
+      margin-top: 12px;
+    }
+
+    /* ส่วนแสดงผลสถิติแถวล่าง 3 คอลัมน์ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 0.9fr; 
+      align-items: flex-start;
+      text-align: left;
+      padding-top: 10px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-family: 'Barlow Condensed', 'Impact', sans-serif;
+      font-size: 34px;
+      font-style: italic;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em; /* เพิ่มช่องไฟส่วนตัวเลขแถวล่าง */
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #A5A5A5; /* สีเทาพรีเมียมตามภาพต้นฉบับ */
+    }
+
+    /* ส่วนท้ายของการ์ด */
+    .card-footer {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 48px;
+    }
+
+    .footer-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.25;
+    }
+
+    .footer-badge span {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* ปุ่มบันทึกภาพลงเครื่อง */
+    .save-btn {
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .save-btn:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* --- NAVIGATION BAR --- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 440px;
+      height: 68px;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+
+    .nav-item {
+      color: #444444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px; height: 50px;
+    }
+
+    .nav-item.active {
+      color: #FFFFFF;
+    }
+  </style>
 </head>
 <body>
 
   <div class="app-wrapper">
-    <!-- Header -->
     <header class="app-header">
       <div class="logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
           <circle cx="14" cy="14" r="13" stroke="white" stroke-width="1.5"/>
           <path d="M8 18L12 10L16 15L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span class="logo-text">RUNSTAT</span>
       </div>
       <div class="lang-switcher">
-        <button class="lang-btn active" data-lang="th">TH</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="kr">한</button>
+        <button class="lang-btn active" data-lang="th" onclick="switchLanguage('th')">TH</button>
+        <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="kr" onclick="switchLanguage('kr')">한</button>
       </div>
     </header>
 
-    <!-- Input Section -->
     <section class="input-section">
       <div class="section-label" id="label-input">กรอกข้อมูลการวิ่ง</div>
 
       <div class="input-grid">
-        <div class="input-group">
+        <div class="input-group" style="grid-column: span 2;">
           <label class="input-label" id="label-distance">ระยะทาง</label>
           <div class="input-wrapper">
-            <input type="number" id="distance" placeholder="5.00" step="0.01" min="0" />
-            <span class="input-unit" id="unit-distance">กม.</span>
+            <input type="number" id="distance" placeholder="5.01" step="0.01" min="0" value="5.01" />
           </div>
         </div>
 
         <div class="input-group">
           <label class="input-label" id="label-pace">เพซ</label>
           <div class="input-wrapper">
-            <input type="text" id="pace" placeholder="5:30" />
-            <span class="input-unit" id="unit-pace">นาที/กม.</span>
+            <input type="text" id="pace" placeholder="5'35&quot;" value="5'35&quot;" />
           </div>
         </div>
 
         <div class="input-group">
           <label class="input-label" id="label-time">เวลา</label>
           <div class="input-wrapper">
-            <input type="text" id="time" placeholder="27:30" />
-            <span class="input-unit" id="unit-time">นาที</span>
+            <input type="text" id="time" placeholder="28:03" value="28:03" />
           </div>
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="grid-column: span 2;">
           <label class="input-label" id="label-calories">แคลอรี่</label>
           <div class="input-wrapper">
-            <input type="number" id="calories" placeholder="258" min="0" />
-            <span class="input-unit">kcal</span>
+            <input type="number" id="calories" placeholder="258" min="0" value="258" />
           </div>
         </div>
       </div>
@@ -79,102 +421,209 @@
       <button class="generate-btn" id="generateBtn" onclick="generateCard()">
         <span id="btn-text">สร้างสถิติ</span>
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </section>
 
-    <!-- Result Card -->
     <section class="result-section" id="resultSection">
-
-      <!-- Capture wrapper — this entire block becomes the PNG -->
       <div class="capture-wrap" id="captureWrap">
-
         <div class="stats-card" id="statsCard">
-
-          <!-- Glow Top -->
-          <div class="card-glow"></div>
-
-          <!-- Card Header -->
+          
           <div class="card-header">
             <div class="card-tag" id="card-tag">วิ่ง</div>
-            <div class="card-date" id="card-date"></div>
+            <div class="card-date" id="card-date">---</div>
           </div>
 
-          <!-- Big Distance -->
           <div class="distance-display">
-            <div class="distance-value" id="display-distance">—</div>
+            <div class="distance-value" id="display-distance">5.01</div>
             <div class="distance-unit" id="display-distance-unit">กิโลเมตร</div>
           </div>
 
-          <!-- Divider -->
-          <div class="card-divider">
-            <div class="divider-line"></div>
-          </div>
-
-          <!-- 3 Stats Row -->
           <div class="stats-row">
             <div class="stat-item">
-              <div class="stat-value" id="display-pace">—</div>
-              <div class="stat-label" id="stat-label-pace">เพซ</div>
+              <div class="stat-value" id="display-pace">5'35"</div>
+              <div class="stat-label" id="stat-label-pace">เฉลี่ยเพซ</div>
             </div>
-            <div class="stat-separator"></div>
             <div class="stat-item">
-              <div class="stat-value" id="display-time">—</div>
+              <div class="stat-value" id="display-time">28:03</div>
               <div class="stat-label" id="stat-label-time">เวลา</div>
             </div>
-            <div class="stat-separator"></div>
             <div class="stat-item">
-              <div class="stat-value" id="display-calories">—</div>
-              <div class="stat-label">kcal</div>
+              <div class="stat-value" id="display-calories">258</div>
+              <div class="stat-label" id="stat-label-calories">แคลอรี</div>
             </div>
           </div>
 
-          <!-- Footer -->
           <div class="card-footer">
             <div class="footer-badge">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <circle cx="6" cy="6" r="5" stroke="#999" stroke-width="1"/>
                 <path d="M3 6L5 8L9 4" stroke="#999" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <span id="footer-text">RUNSTAT</span>
+              <span id="footer-text">RUNSTAT PREMIUM</span>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- Save PNG Button -->
       <button class="save-btn" id="saveBtn" onclick="saveAsPng()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M8 2V10M8 10L5 7M8 10L11 7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M2 12H14" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
-        <span id="save-btn-text">บันทึก PNG</span>
+        <span id="save-btn-text">บันทึก PNG ลงเครื่อง</span>
       </button>
     </section>
 
-    <!-- Footer Nav -->
     <nav class="bottom-nav">
       <div class="nav-item active">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M3 10L10 3L17 10V18H13V13H7V18H3V10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+          <path d="M3 10L10 3L17 10V18H13V13H7V18H3V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 2L12.5 7.5H18L13.5 11L15.5 17L10 13.5L4.5 17L6.5 11L2 7.5H7.5L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2L12.5 7.5H18L13.5 11L15.5 17L10 13.5L4.5 17L6.5 11L2 7.5H7.5L10 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="nav-item">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M4 17C4 14 6.7 12 10 12C13.3 12 16 14 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M4 17C4 14 6.7 12 10 12C13.3 12 16 14 16 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
       </div>
     </nav>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const languages = {
+      th: {
+        inputTitle: "กรอกข้อมูลการวิ่ง",
+        distance: "ระยะทาง",
+        pace: "เพซ",
+        time: "เวลา",
+        calories: "แคลอรี่",
+        btnGenerate: "สร้างสถิติ",
+        cardTag: "วิ่ง",
+        unitDistance: "กิโลเมตร",
+        unitPace: "เฉลี่ยเพซ",
+        unitTime: "เวลา",
+        unitCalories: "แคลอรี",
+        btnSave: "บันทึก PNG ลงเครื่อง"
+      },
+      en: {
+        inputTitle: "Enter Running Stats",
+        distance: "Distance",
+        pace: "Pace",
+        time: "Time",
+        calories: "Calories",
+        btnGenerate: "Generate Stats",
+        cardTag: "RUN",
+        unitDistance: "Kilometers",
+        unitPace: "Avg Pace",
+        unitTime: "Time",
+        unitCalories: "Calories",
+        btnSave: "Save PNG to Device"
+      },
+      kr: {
+        inputTitle: "러닝 데이터 입력",
+        distance: "거리",
+        pace: "페이스",
+        time: "시간",
+        calories: "칼로리",
+        btnGenerate: "스태츠 생성",
+        cardTag: "러닝",
+        unitDistance: "킬로미터",
+        unitPace: "평균 페이스",
+        unitTime: "시간",
+        unitCalories: "칼로리",
+        btnSave: "PNG 이미지 저장"
+      }
+    };
+
+    let activeLang = 'th';
+
+    function switchLanguage(lang) {
+      activeLang = lang;
+      
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+      });
+
+      const dictionary = languages[lang];
+      
+      document.getElementById('label-input').innerText = dictionary.inputTitle;
+      document.getElementById('label-distance').innerText = dictionary.distance;
+      document.getElementById('label-pace').innerText = dictionary.pace;
+      document.getElementById('label-time').innerText = dictionary.time;
+      document.getElementById('label-calories').innerText = dictionary.calories;
+      document.getElementById('btn-text').innerText = dictionary.btnGenerate;
+      document.getElementById('save-btn-text').innerText = dictionary.btnSave;
+
+      document.getElementById('card-tag').innerText = dictionary.cardTag;
+      document.getElementById('display-distance-unit').innerText = dictionary.unitDistance;
+      document.getElementById('stat-label-pace').innerText = dictionary.unitPace;
+      document.getElementById('stat-label-time').innerText = dictionary.unitTime;
+      document.getElementById('stat-label-calories').innerText = dictionary.unitCalories;
+      
+      generateCard();
+    }
+
+    function setCardDate() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      document.getElementById('card-date').innerText = now.toLocaleDateString(activeLang === 'th' ? 'th-TH' : (activeLang === 'kr' ? 'ko-KR' : 'en-US'), options);
+    }
+
+    function generateCard() {
+      const distanceInput = document.getElementById('distance').value || "5.01";
+      const paceInput = document.getElementById('pace').value || "5'35\"";
+      const timeInput = document.getElementById('time').value || "28:03";
+      const caloriesInput = document.getElementById('calories').value || "258";
+
+      let parsedDistance = parseFloat(distanceInput);
+      let finalDistance = isNaN(parsedDistance) ? distanceInput : parsedDistance.toFixed(2);
+
+      document.getElementById('display-distance').innerText = finalDistance;
+      document.getElementById('display-pace').innerText = paceInput;
+      document.getElementById('display-time').innerText = timeInput;
+      document.getElementById('display-calories').innerText = caloriesInput;
+
+      setCardDate();
+    }
+
+    // ฟังก์ชันจับภาพหน้าจอที่เสถียรที่สุดสำหรับ White Card Design
+    function saveAsPng() {
+      const target = document.getElementById('captureWrap');
+      const saveBtnText = document.getElementById('save-btn-text');
+      const originalText = saveBtnText.innerText;
+      
+      saveBtnText.innerText = "...";
+
+      html2canvas(target, {
+        backgroundColor: '#FFFFFF',
+        scale: 3, // สเกลภาพคมชัดแบบ Ultra High Definition 
+        useCORS: true,
+        logging: false,
+        letterRendering: true // เปิดคำสั่งป้องกันฟอนต์เคลื่อนหรือซ้อนกันในโมดูล Canvas
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `RUNSTAT-${document.getElementById('display-distance').innerText}KM.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        saveBtnText.innerText = originalText;
+      }).catch(err => {
+        console.error("Export failure", err);
+        saveBtnText.innerText = originalText;
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      generateCard();
+    });
+  </script>
 </body>
 </html>
