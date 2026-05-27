@@ -12,7 +12,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800;1,900&family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;1,700;1,800;1,900&family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -158,7 +158,7 @@
       padding: 0 14px;
       color: #FFFFFF;
       font-family: 'DM Sans', sans-serif;
-      font-size: 16px; /* ป้องกัน iOS Auto Zoom */
+      font-size: 16px; 
       font-weight: 600;
       outline: none;
     }
@@ -197,25 +197,23 @@
       gap: 20px;
     }
 
-    /* กรอบคลุมสำหรับส่งออกไฟล์ภาพ (ไม่มีขอบโค้ง) */
     .capture-wrap {
       background: #FFFFFF;
       padding: 0;
-      border-radius: 0 !important; /* เอาขอบโค้งออกเด็ดขาด */
+      border-radius: 0 !important; 
     }
 
-    /* --- PREMIUM WHITE STATS CARD (PURE SQUARE) --- */
+    /* --- PREMIUM WHITE STATS CARD --- */
     .stats-card {
       background: #FFFFFF;
       color: #000000;
-      border-radius: 0 !important; /* เอาขอบโค้งออกตามสั่ง */
+      border-radius: 0 !important; 
       padding: 40px 36px;
       position: relative;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
       width: 100%;
     }
 
-    /* ส่วนหัวการ์ด */
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -239,19 +237,19 @@
       opacity: 0.35;
     }
 
-    /* --- DIGITAL TYPOGRAPHY (LEFT ALIGNED + PERFECT SPACING) --- */
+    /* --- DISTANCE DISPLAY (Barlow Condensed Bold Italic) --- */
     .distance-display {
-      text-align: left; /* ชิดซ้ายตรงตามรูปเรฟ */
+      text-align: left; 
       margin-bottom: 36px;
     }
 
     .distance-value {
-      font-family: 'Barlow Condensed', 'Impact', sans-serif;
-      font-size: 105px; /* ขนาดใหญ่พิเศษ */
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 105px; 
       font-weight: 900;
       font-style: italic;
       line-height: 0.8;
-      letter-spacing: 0.02em; /* เพิ่มช่องไฟ ไม่ให้ติดหรือซ้อนกันตัวอักษรเวลากดเซฟ */
+      letter-spacing: 0.02em; 
       color: #000000;
       display: block;
     }
@@ -263,7 +261,7 @@
       margin-top: 12px;
     }
 
-    /* ส่วนแสดงผลสถิติแถวล่าง 3 คอลัมน์ */
+    /* --- BOTTOM STATS ROW (Barlow Condensed Thin & Straight) --- */
     .stats-row {
       display: grid;
       grid-template-columns: 1.1fr 1fr 0.9fr; 
@@ -277,24 +275,24 @@
       flex-direction: column;
     }
 
+    /* ตัวเลขแถวด้านล่างบางลงและตั้งตรงอย่างสมบูรณ์แบบ */
     .stat-value {
-      font-family: 'Barlow Condensed', 'Impact', sans-serif;
-      font-size: 34px;
-      font-style: italic;
-      font-weight: 800;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-style: normal;  /* ตัวตรง ไม่เอียง */
+      font-weight: 600;   /* ตัวบางเฉียบพรีเมียม */
       color: #000000;
       line-height: 1;
       margin-bottom: 6px;
-      letter-spacing: 0.02em; /* เพิ่มช่องไฟส่วนตัวเลขแถวล่าง */
+      letter-spacing: 0.03em; 
     }
 
     .stat-label {
       font-size: 11px;
       font-weight: 500;
-      color: #A5A5A5; /* สีเทาพรีเมียมตามภาพต้นฉบับ */
+      color: #A5A5A5; 
     }
 
-    /* ส่วนท้ายของการ์ด */
     .card-footer {
       display: flex;
       justify-content: flex-start;
@@ -314,7 +312,6 @@
       letter-spacing: 1px;
     }
 
-    /* ปุ่มบันทึกภาพลงเครื่อง */
     .save-btn {
       width: 100%;
       height: 52px;
@@ -335,7 +332,6 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    /* --- NAVIGATION BAR --- */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 50%;
@@ -432,7 +428,7 @@
           
           <div class="card-header">
             <div class="card-tag" id="card-tag">วิ่ง</div>
-            <div class="card-date" id="card-date">---</div>
+            <div class="card-date" id="c-date">---</div>
           </div>
 
           <div class="distance-display">
@@ -574,7 +570,7 @@
     function setCardDate() {
       const now = new Date();
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
-      document.getElementById('card-date').innerText = now.toLocaleDateString(activeLang === 'th' ? 'th-TH' : (activeLang === 'kr' ? 'ko-KR' : 'en-US'), options);
+      document.getElementById('c-date').innerText = now.toLocaleDateString(activeLang === 'th' ? 'th-TH' : (activeLang === 'kr' ? 'ko-KR' : 'en-US'), options);
     }
 
     function generateCard() {
@@ -594,7 +590,6 @@
       setCardDate();
     }
 
-    // ฟังก์ชันจับภาพหน้าจอที่เสถียรที่สุดสำหรับ White Card Design
     function saveAsPng() {
       const target = document.getElementById('captureWrap');
       const saveBtnText = document.getElementById('save-btn-text');
@@ -604,10 +599,10 @@
 
       html2canvas(target, {
         backgroundColor: '#FFFFFF',
-        scale: 3, // สเกลภาพคมชัดแบบ Ultra High Definition 
+        scale: 3, 
         useCORS: true,
         logging: false,
-        letterRendering: true // เปิดคำสั่งป้องกันฟอนต์เคลื่อนหรือซ้อนกันในโมดูล Canvas
+        letterRendering: true 
       }).then(canvas => {
         const link = document.createElement('a');
         link.download = `RUNSTAT-${document.getElementById('display-distance').innerText}KM.png`;
@@ -627,3 +622,5 @@
   </script>
 </body>
 </html>
+
+```
